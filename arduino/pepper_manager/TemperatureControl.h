@@ -80,7 +80,6 @@ public:
     LastUpdatedIndex++;
     LastUpdatedIndex = LastUpdatedIndex >= NumberOfSensors ? 0 : LastUpdatedIndex;
 
-    _sensors.requestTemperaturesByIndex(LastUpdatedIndex);
     TemperatureMeasurements[LastUpdatedIndex] = _sensors.getTempCByIndex(LastUpdatedIndex);
     if (IsHeating[LastUpdatedIndex] && (TemperatureMeasurements[LastUpdatedIndex] >= TemperatureSet + TemperatureDelta))
     {
@@ -91,6 +90,11 @@ public:
       IsHeating[LastUpdatedIndex] = true;
     }
     digitalWrite(Constants::Temperature::HeaterTransistorPinNumbers[LastUpdatedIndex], IsHeating[LastUpdatedIndex]);
+
+    // Request next temperature
+    uint8_t nextIndex = LastUpdatedIndex + 1;
+    if (nextIndex >= NumberOfSensors) nextIndex = 0;
+    _sensors.requestTemperaturesByIndex(nextIndex);
   }
 
   static constexpr uint8_t NumberOfSensors = Constants::Temperature::NumberOfSensors;
