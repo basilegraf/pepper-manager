@@ -37,6 +37,7 @@ namespace Constants
     static constexpr uint8_t NumberOfSensors = 4;
     static constexpr uint8_t SensorsOneWirePinNumber = 6;
     static constexpr uint8_t HeaterTransistorPinNumbers[4] = {A0, A1, A2, A3};
+    static constexpr float HeaterPower[4] = {12.0f * 12.0f / 180.0f, 12.0f * 12.0f / 180.0f, 12.0f * 12.0f / 180.0f, 12.0f * 12.0f / 180.0f}; // 180Ohm at 12V
     static constexpr float DefaultSetTemperature = 27.0f;
     static constexpr float DefaultDeltaTemperature = 0.25f;
   }
@@ -44,6 +45,7 @@ namespace Constants
   namespace Light
   {
     static constexpr uint8_t LightControlPinNumber = A4; // LED_BUILTIN;
+    static float LightPower = 5.0f;
   }
   
 }

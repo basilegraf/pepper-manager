@@ -10,9 +10,12 @@
 PepperManager::PepperManager() :
   State(ManagerState::Display),
   Sun(Constants::Time::EarliestLightOnHour, Constants::Time::MinArtificialDayDuration),
+  Energy(0.0f),
   _buttonMinus(*this, Constants::Buttons::MinusPinNumber),
   _buttonEdit(*this, Constants::Buttons::EditPinNumber),
-  _buttonPlus(*this, Constants::Buttons::PlusPinNumber)
+  _buttonPlus(*this, Constants::Buttons::PlusPinNumber),
+  _accumulatedEnergy(0.0f),
+  _displayEnergy(false)
 {}
 
 PepperManager::~PepperManager()
@@ -54,16 +57,47 @@ void PepperManager::Loop(bool isNewSecond)
       uint8_t minDayDuration = uint8_t(round(Sun.GetMinDayDuration()));
       Display.PrintArtificialDayLength(minDayDuration, State);
 
-      // Temperature control & display
-      TempControl.Loop();
-      Display.PrintTemperature(
-        TempControl.LastUpdatedIndex,
-        TempControl.TemperatureMeasurements[TempControl.LastUpdatedIndex],
-        TempControl.IsHeating[TempControl.LastUpdatedIndex]);
+      if (_displayEnergy)
+      {
+        _displayEnergy = false;
+        delay(600); // Wait to match temp sensor read time
+        Display.PrintEnergy(Energy);
+      }
+      else
+      {
+        // Temperature control & display
+        TempControl.Loop();
+        Display.PrintTemperature(
+          TempControl.LastUpdatedIndex,
+          TempControl.TemperatureMeasurements[TempControl.LastUpdatedIndex],
+          TempControl.IsHeating[TempControl.LastUpdatedIndex]);
+        
+        if (TempControl.LastUpdatedIndex + 1 == Constants::Temperature::NumberOfSensors)
+        {
+          // Next time, skip temperatur control and display energy instead
+          _displayEnergy = true;
+        }
+      }
+      
 
       // Light control
       bool lightOn = Sun.IsLightOn(Date.YearDay, Date.DecimalHours);
       digitalWrite(Constants::Light::LightControlPinNumber, lightOn);
+
+      // Accumulate energy
+      constexpr float ratio = 1.0f / 3600.0f; // runs every second
+      if (lightOn) _accumulatedEnergy += ratio * Constants::Light::LightPower;
+
+      for (uint8_t k = 0; k < Constants::Temperature::NumberOfSensors; k++)
+      {
+        if (TempControl.IsHeating[k]) _accumulatedEnergy += ratio * Constants::Temperature::HeaterPower[k];
+      }
+
+      if (_accumulatedEnergy > min(1.0f, 0.001f * Energy))
+      {
+        Energy += _accumulatedEnergy;
+        _accumulatedEnergy = 0.0f;
+      }
     } 
   }
 }

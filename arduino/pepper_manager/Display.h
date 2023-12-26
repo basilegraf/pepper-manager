@@ -168,6 +168,19 @@ public:
     }
   }
 
+  void PrintEnergy(float energy)
+  {
+    constexpr uint8_t colStart = 0;
+    constexpr uint8_t lineStart = 1;
+
+    Lcd.setCursor(colStart, lineStart);
+    Lcd.print("E");
+    Lcd.print(":");
+    Lcd.print(energy);
+    Lcd.setCursor(colStart+6, lineStart); // back one char
+    Lcd.write("Wh");
+  }
+
   void QuitEditMode()
   {
     Lcd.noBlink();

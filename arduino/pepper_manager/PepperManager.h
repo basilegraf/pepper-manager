@@ -32,7 +32,7 @@ public:
   DateTime Date;
   Display Display;
   TempratureControl TempControl;
-
+  float Energy;
 private:
 
   void _callbackButtonMinusPress();
@@ -41,7 +41,8 @@ private:
   void _callbackButtonPlusPress();
   void _updateAfterStateChange();
 
-  
+  float _accumulatedEnergy; // accumulate on a smaller number for accuracy
+  bool _displayEnergy;
 
   ButtonType _buttonMinus;
   ButtonType _buttonEdit;
