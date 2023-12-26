@@ -91,15 +91,16 @@ public:
 
   void PrintSetTemperature(uint8_t setTemperature, ManagerState state)
   {
-    constexpr uint8_t colStart = 9;
+    constexpr uint8_t colStart = 8;
     constexpr uint8_t lineStart = 1;
 
     Lcd.setCursor(colStart, lineStart);
+    Lcd.print(" ");
     Lcd.print(setTemperature);
     Lcd.print("C");
     if (state == ManagerState::EditSetTemperature)
     {
-      Lcd.setCursor(colStart + 1, lineStart);
+      Lcd.setCursor(colStart + 2, lineStart);
       Lcd.blink();
     }
   }

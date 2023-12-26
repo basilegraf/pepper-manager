@@ -89,6 +89,11 @@ public:
     {
       IsHeating[LastUpdatedIndex] = true;
     }
+    if (TemperatureMeasurements[LastUpdatedIndex] < -126.0f)
+    {
+      // Disconnected sensors read -127.0C => do not heat
+      IsHeating[LastUpdatedIndex] = false;
+    }
     digitalWrite(Constants::Temperature::HeaterTransistorPinNumbers[LastUpdatedIndex], IsHeating[LastUpdatedIndex]);
 
     // Request next temperature
