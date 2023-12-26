@@ -1,3 +1,4 @@
+#include "Constants.h"
 #include <Arduino.h>
 #include "SunHours.h"
 
@@ -50,13 +51,13 @@ float evalLUT(int day, float* lut)
 
 float Sun::SunriseHour(int day)
 {
-  return evalLUT(day, sunrisesHoursLUT);
+  return evalLUT(day, sunrisesHoursLUT) + Constants::Light::DayTimeOverlapHours;
 }
 
 
 float Sun::SunsetHour(int day)
 {
-  return evalLUT(day, sunsetsHourLUT);
+  return evalLUT(day, sunsetsHourLUT) - Constants::Light::DayTimeOverlapHours;
 }
 
 void Sun::SetDay(int day)
