@@ -133,8 +133,16 @@ public:
     Lcd.setCursor(colStart, lineStart);
     Lcd.print(chanelIndex + 1);
     Lcd.print(":");
-    Lcd.print(temperature);
-    Lcd.write(isHeating ? Characters::Up : Characters::Down);
+
+    if (temperature > -126.0f)
+    {
+      Lcd.print(temperature);
+      Lcd.write(isHeating ? Characters::Up : Characters::Down);
+    }
+    else
+    {
+      Lcd.print(" nc   ");
+    }
   }
 
   void PrintSetTemperature(uint8_t setTemperature, ManagerState state)

@@ -60,19 +60,19 @@ void PepperManager::Loop(bool isNewSecond)
       if (_displayEnergy)
       {
         _displayEnergy = false;
-        delay(600); // Wait to match temp sensor read time
         Display.PrintEnergy(Energy);
       }
       else
       {
         // Temperature control & display
-        TempControl.Loop();
         Display.PrintTemperature(
           TempControl.LastUpdatedIndex,
           TempControl.TemperatureMeasurements[TempControl.LastUpdatedIndex],
           TempControl.IsHeating[TempControl.LastUpdatedIndex]);
         
-        if (TempControl.LastUpdatedIndex + 1 == Constants::Temperature::NumberOfSensors)
+        TempControl.Loop(); // Call after to avoid delaying the display
+
+        if (TempControl.LastUpdatedIndex == 0)
         {
           // Next time, skip temperatur control and display energy instead
           _displayEnergy = true;
