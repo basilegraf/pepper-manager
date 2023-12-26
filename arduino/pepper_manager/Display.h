@@ -4,6 +4,48 @@
 #include "Constants.h"
 #include "ManagerState.h"
 
+namespace Characters
+{
+  static constexpr byte Up = 0;
+  static constexpr byte UpDef[8] = 
+  {
+    B00000,
+    B00100,
+    B01110,
+    B10101,
+    B00100,
+    B00100,
+    B00100,
+    B00000,
+  };
+
+  static constexpr byte Down = 1;
+  static constexpr byte DownDef[8] = 
+  {
+    B00000,
+    B00100,
+    B00100,
+    B00100,
+    B10101,
+    B01110,
+    B00100,
+    B00000,
+  };
+
+  static constexpr byte DegC = 2;
+  static constexpr byte DegCDef[8] = 
+  {
+    B11000,
+    B11000,
+    B00111,
+    B01000,
+    B01000,
+    B01000,
+    B00111,
+    B00000,
+  };
+}
+
 
 class Display
 {
@@ -26,6 +68,11 @@ public:
         Lcd.print(" ");
       }
     }
+
+    Lcd.createChar(Characters::Up, Characters::UpDef);
+    Lcd.createChar(Characters::Down, Characters::DownDef);
+    Lcd.createChar(Characters::DegC, Characters::DegCDef);
+    
   }
 
 
@@ -86,7 +133,7 @@ public:
     Lcd.print(chanelIndex + 1);
     Lcd.print(":");
     Lcd.print(temperature);
-    Lcd.print(isHeating ? "H" : "C");
+    Lcd.write(isHeating ? Characters::Up : Characters::Down);
   }
 
   void PrintSetTemperature(uint8_t setTemperature, ManagerState state)
@@ -97,7 +144,7 @@ public:
     Lcd.setCursor(colStart, lineStart);
     Lcd.print(" ");
     Lcd.print(setTemperature);
-    Lcd.print("C");
+    Lcd.write(Characters::DegC);
     if (state == ManagerState::EditSetTemperature)
     {
       Lcd.setCursor(colStart + 2, lineStart);
