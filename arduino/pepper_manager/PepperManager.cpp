@@ -80,9 +80,10 @@ void PepperManager::Loop(bool isNewSecond)
       }
       
 
-      // Light control
+      // Light control & display
       bool lightOn = Sun.IsLightOn(Date.YearDay, Date.DecimalHours);
       digitalWrite(Constants::Light::LightControlPinNumber, lightOn);
+      Display.PrintLightOnOff(lightOn);
 
       // Accumulate energy
       constexpr float ratio = 1.0f / 3600.0f; // runs every second

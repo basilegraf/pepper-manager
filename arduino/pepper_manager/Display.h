@@ -44,6 +44,7 @@ namespace Characters
     B00111,
     B00000,
   };
+
 }
 
 
@@ -173,12 +174,39 @@ public:
     constexpr uint8_t colStart = 0;
     constexpr uint8_t lineStart = 1;
 
+    bool showkW = energy >= 1000.0f;
+
     Lcd.setCursor(colStart, lineStart);
     Lcd.print("E");
     Lcd.print(":");
-    Lcd.print(energy);
-    Lcd.setCursor(colStart+6, lineStart); // back one char
-    Lcd.write("Wh");
+    Lcd.print(showkW ? energy * 0.001f : energy);
+    if (showkW)
+    {
+      Lcd.setCursor(colStart+5, lineStart); // back two char
+      Lcd.write("kWh");
+    }
+    else
+    {
+      Lcd.setCursor(colStart+6, lineStart); // back one char
+      Lcd.write("Wh");
+    }
+  }
+
+  void PrintLightOnOff(bool lightOn)
+  {
+    constexpr uint8_t colStart = 13;
+    constexpr uint8_t lineStart = 0;
+
+    Lcd.setCursor(colStart, lineStart);
+    if (lightOn)
+    {
+      Lcd.print(" ON");
+    }
+    else
+    {
+      Lcd.print("OFF");
+    }
+    
   }
 
   void QuitEditMode()
