@@ -29,7 +29,7 @@ namespace Constants
   {
     static constexpr uint8_t MinusPinNumber = 11;
     static constexpr uint8_t EditPinNumber = 9;
-    static constexpr uint8_t PlusPinNumber = 8;
+    static constexpr uint8_t PlusPinNumber = 7;
   }
 
   namespace Temperature
